@@ -1,0 +1,136 @@
+﻿@model AgendaProject.Models.Agenda
+
+@{
+    ViewBag.Title = "Edit";
+}
+<hr />
+<p>
+    @Html.ActionLink("Details", "Details", new { id = Model.Id })
+</p>
+<hr />
+<img width="100%" src="~/images/logo.jpg" />
+<div>
+    <hr />
+    <div class="row">
+        <span class="pull-right"><b>@Html.DisplayFor(model => model.Location)</b></span>
+    </div>
+    <div class="row">
+        <span class="pull-right"><b>@Model.MeetingDateTime.ToLongDateString()</b></span>
+    </div>
+    <div class="row">
+        <span class="pull-right"><b>@Html.DisplayFor(model => model.AgendaType)</b></span>
+    </div>
+    <hr />
+    <div class="row text-center">
+        <b>@Html.DisplayFor(model => model.Title)</b>
+    </div>
+    <hr />
+</div>
+<div>
+    @foreach (var section in Model.SectionHeadings)
+    {
+        <div class="row">
+            <b>@Html.DisplayFor(s => section.Description)</b>
+        </div>
+        <hr />
+        int? startId = 0;
+        foreach (var agendaItem in section.AgendaItems)
+        {
+            if (agendaItem.Prev == null)
+            {
+                startId = agendaItem.Id;
+            }
+        }
+        for (var i = 0; i < section.AgendaItems.Count; i++)
+        {
+            int? temp = 0;
+            foreach (var agendaItem in section.AgendaItems)
+            {
+                if (agendaItem.Id == startId)
+                {
+                    <div class="row">
+                        <div class="col-xs-4">@Html.DisplayFor(s => agendaItem.Description)</div>
+                        <div class="col-xs-4">
+                            @Html.ActionLink("Attachment", "AddAttachment", new { id = agendaItem.Id }) |
+                            @if (agendaItem.VoteItems.Count == 0)
+                            {
+                                @Html.ActionLink("Vote", "AddVoteItem", new { id = agendaItem.Id })
+                                <text> | </text>
+                            }
+
+
+                            @Html.ActionLink("Edit", "EditItem", new { id = agendaItem.Id })
+                            @if (agendaItem.Prev != null || agendaItem.Nxt != null)
+                            {
+                                <text> | Move </text>
+                            }
+
+                            @if (agendaItem.Prev != null)
+                            {
+                                @Html.ActionLink("Up", "MoveUp", new { id = agendaItem.Id })
+
+                            }
+
+                            @if (agendaItem.Prev != null && agendaItem.Nxt != null)
+                            {
+                                <text> | </text>
+                            }
+
+                            @if (agendaItem.Nxt != null)
+                            {
+                                @Html.ActionLink("Down", "MoveDown", new { id = agendaItem.Id })
+                            }
+
+                            @if (agendaItem.WorkItems.Count == 0 && agendaItem.Attachments.Count == 0)
+                            {
+                                <text> | </text> @Html.ActionLink("Delete", "DeleteAgendaItem", new { id = agendaItem.Id, sid = section.Id })
+                            }
+
+                        </div>
+                        <div class="col-xs-4">@Html.DropDownList("MoveTo", ViewBag.SectionHeadings as IEnumerable<SelectListItem>, new { @class = "form-control", id = agendaItem.Id })</div>
+                    </div>
+                    <hr />
+
+                    foreach (var attachment in agendaItem.Attachments)
+                    {
+                        <div class="row">
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-4">@Html.DisplayFor(s => attachment.Description)</div>
+                            <div class="col-xs-4">@Html.ActionLink("Delete", "DeleteAttachment", new { id = attachment.Id, agendaId = Model.Id })</div>
+                        </div>
+                        <hr />
+                    }
+                    foreach (var workitem in agendaItem.WorkItems)
+                    {
+                        foreach (var attachment in workitem.Attachments)
+                        {
+                            <div class="row">
+                                <div class="col-xs-1"></div>
+                                <div class="col-xs-4">@Html.DisplayFor(s => attachment.Description)</div>
+                                <div class="col-xs-4">Work Item Attachment</div>
+                            </div>
+                            <hr />
+                        }
+                    }
+                    temp = agendaItem.Nxt;
+                }
+
+            }
+            startId = temp;
+        }
+    }
+
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $("select").change(function() {
+            $.ajax({
+                url: "/AgendaManager/Agenda/MoveAgendaItem",
+                data: { itemId: this.id, sectionHeadingId: this.value, agendaId: @Model.Id },
+                success: function() {
+                    window.location.reload(true);
+                }
+            });
+        });
+    </script>
+}

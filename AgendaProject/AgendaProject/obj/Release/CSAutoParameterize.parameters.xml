@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="AgendaContext-Web.config Connection String" description="AgendaContext Connection String used in web.config by the application to access the database." defaultValue="Data Source=(localdb)\mssqllocaldb;Initial Catalog=AgendaDevelopment;AttachDbFilename=|DataDirectory|\AgendaDB.mdf;Integrated Security=True;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="D:\\Dev\\AgendaProject\\AgendaProject\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AgendaContext']/@connectionString" />
+  </parameter>
+</parameters>

@@ -1,0 +1,42 @@
+﻿@model List<AgendaProject.Models.WorkItem>
+
+<h2>Outstanding Work Items</h2>
+<p>
+    @Html.ActionLink("Add A New Savannah Historic District Board of Review Application", "CreateWorkItem")
+</p>
+<hr />
+<table class="table table-striped">
+    <tr>
+        <td><b>FileNumber</b></td>
+        <td><b>Petitioner</b></td>
+        <td><b>Address</b></td>
+        <td><b>Assigned To</b></td>
+        <td></td>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(m => item.Filenumber)</td>
+            <td>@Html.DisplayFor(m => item.Petitioner)</td>
+
+            @if (item.Addresses.Count == 0)
+            {
+                <td>No address is entered</td>
+            }
+            else
+            {
+                <td>@item.Addresses.First().StreetAddress</td>
+
+            }
+            <td>@Html.DisplayFor(m => item.AssignedTo)</td>
+            <td>
+                Add @Html.ActionLink("Address", "AddAddress", new { id = item.Id }) | @Html.ActionLink("Attachment", "AddAttachment", new { id = item.Id }) |
+                @if (item.PetitionType == "Staff")
+                {
+                    @Html.ActionLink("Staff Decision", "AddStaffDecision", new { id = item.Id })<text> | </text> }
+                View @Html.ActionLink("Details", "Details", new { id = item.Id }) | @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

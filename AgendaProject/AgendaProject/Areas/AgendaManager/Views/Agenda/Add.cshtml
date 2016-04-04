@@ -1,0 +1,32 @@
+﻿@model AgendaProject.Models.ViewModels.AddAgendaItemView
+@{
+    ViewBag.Title = "Add";
+}
+
+<h2>Create New Agenda Item</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <b>Add to</b>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownListFor(m => m.AgendaSection, ViewBag.SectionHeadings as IEnumerable<SelectListItem>, new { @class = "form-control" })
+        </div>
+        <div class="col-md-2">
+            <b>Description</b>
+        </div>
+        <div class="col-md-4">
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control" });
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            <input type="submit" value="Add" class="btn btn-info" />
+        </div>
+    </div>
+}

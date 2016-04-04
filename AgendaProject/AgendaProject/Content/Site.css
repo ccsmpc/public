@@ -1,0 +1,99 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select {
+    width: 100%
+}
+textarea {
+    width: 100%;
+    height: 200px;
+    padding: 5px;
+}
+
+.tabs {
+    width: 100%;
+    display: inline-block;
+}
+
+.tab-links:after {
+    display: block;
+    clear: both;
+    content: '';
+}
+
+.tab-links li {
+    margin: 0px 5px;
+    float: left;
+    list-style: none;
+}
+
+.tab-links a {
+    padding: 9px 15px;
+    display: inline-block;
+    border-radius: 3px 3px 0px 0px;
+    background: #7fb5da;
+    font-size: 16px;
+    font-weight: 600;
+    color: #4c4c4c;
+    transition: all linear 0.15s;
+}
+
+.tab-links a:hover {
+    background: #a7cc5e;
+    text-decoration: none;
+}
+
+li.active a, li.active a:hover {
+    background: #fff;
+    color: #4c4c4c;
+}
+
+.tab-content {
+    padding: 15px;
+    border-radius: 3px;
+    box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
+    background: #fff;
+}
+
+.tab {
+    display: none;
+}
+.tab.active {
+    display: block;
+}
+
+object {
+    width: 800px;
+    height: 700px;
+    
+}
+
+.left-column {
+    width: 45%;
+    float: left;
+    background-color: lightgreen;
+}
+
+.right-column {
+    width: 45%;
+    float: right;
+    padding-right: 10px;
+    background-color: lightcoral;
+}

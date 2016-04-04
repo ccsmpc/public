@@ -1,0 +1,33 @@
+﻿@model AgendaProject.Models.Attachment
+@{
+    ViewBag.Title = "AddAttachment";
+}
+
+<h2>AddAttachment</h2>
+
+@using (Html.BeginForm("AddAttachment","Agenda", null ,FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.AgendaItemId)
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <b>Description</b>
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+        </div>
+        <div class="col-md-2">
+            <b>Select File</b>
+        </div>
+        <div class="col-md-4">
+            <input type="file" name="MyFile" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            <input type="submit" value="AddAttachment" class="btn btn-info" />
+        </div>
+    </div>
+}

@@ -1,0 +1,95 @@
+﻿@model AgendaProject.Models.WorkItem
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form">
+        <h4>Petition of @Model.Petitioner, File Number: @Model.Filenumber</h4><br/>
+        <h5>Recieved on: @Model.Recieved.ToShortDateString() | @Html.ActionLink("Back to List", "Index")</h5>
+        <hr/>
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Recieved)
+        @Html.HiddenFor(model => model.Filenumber)
+
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">@Html.LabelFor(model => model.Petitioner)</span>
+                    @Html.EditorFor(model => model.Petitioner, new {htmlAttributes = new {@class = "form-control"}})
+                    <span class="input-group-addon">@Html.LabelFor(model => model.PetitionType)</span>
+                    @Html.DropDownListFor(m => m.PetitionType, ViewBag.Type as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">@Html.LabelFor(model => model.ScopeOfWork)</span>
+                    @Html.EditorFor(model => model.ScopeOfWork, new {htmlAttributes = new {@class = "form-control"}})
+                    <span class="input-group-addon">@Html.LabelFor(model => model.ConstructionCost)</span><span class="input-group-addon">$</span>
+                    @Html.EditorFor(model => model.ConstructionCost, new {htmlAttributes = new {@class = "form-control"}})
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">@Html.LabelFor(model => model.AssignedTo)</span>
+                    @Html.DropDownListFor(model => model.AssignedTo, ViewBag.Employee as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                    <span class="input-group-addon">@Html.LabelFor(model => model.FeePaid)</span>
+                    @Html.EditorFor(model => model.FeePaid)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">@Html.LabelFor(model => model.ReadyForReview)</span>
+                    @Html.EditorFor(model => model.ReadyForReview)
+                    <span class="input-group-addon">@Html.LabelFor(model => model.IsComplete)</span>
+                    @Html.EditorFor(model => model.IsComplete)
+                    <span class="input-group-addon">@Html.LabelFor(model => model.WasWithdrawn)</span>
+                    @Html.EditorFor(model => model.WasWithdrawn)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-default"/>
+        </div>
+    </div>
+}
+
+<hr/>
+@foreach (var item in Model.StaffDecisions)
+{
+    <div class="row">
+        <div>Staff @item.Decision this item on @item.DecisionDate.</div>
+    </div>
+}
+
+<h4>Attachments</h4>
+<hr/>
+@foreach (var item in Model.Attachments)
+{
+    <div class="row">
+        <a href="@item.FilePath.Replace("~", "http://localhost:13479")" target="_blank">@item.Description</a> | @Html.ActionLink("Edit Description", "EditDescription", new { id = item.Id, workItemId = Model.Id})  | @Html.ActionLink("Delete", "DeleteAttachment", new { id= item.Id, workItemId = Model.Id})
+    </div>
+}
+
+<div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

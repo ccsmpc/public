@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Tech";
+}
+
+<div class="container">
+    <ul id="discussion"></ul>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function() {
+            var chat = $.connection.meetingHub;
+
+            chat.client.addNewMessageToPage = function(name, message) {
+                $('#discussion').append('<li><strong>' + htmlEncode(name) + '</strong>: ' + htmlEncode(message) + '</li>');
+            };
+
+
+            $.connection.hub.start().done(function() {
+                chat.server.joinRoom('Tech Support Guy', "TechSupport");
+            });
+        });
+
+    
+        
+
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+    </script>
+
+}
+

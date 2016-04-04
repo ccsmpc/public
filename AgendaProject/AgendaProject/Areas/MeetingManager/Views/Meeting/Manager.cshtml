@@ -1,0 +1,682 @@
+﻿@{
+    ViewBag.Title = "Manager";
+}
+<div class="row">
+    <span id="roster" style="background-color: red">Attendence: </span><ul id="attendence" class="list-inline"></ul>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-4">Agenda</div>
+    <div class="col-md-4">Section</div>
+    <div class="col-md-4">Item</div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @Html.DropDownList("todaysAgenda", ViewBag.FinalAgendas as IEnumerable<SelectListItem>, "Select Today's Agenda", new {@class = "form-control"})
+    </div>
+    <div class="col-md-4">
+        <span id="sectionTitle">None selected</span>
+    </div>
+    <div class="col-md-4">
+        <span id="agendaItemTitle">None selected</span>
+    </div>
+</div>
+<hr/>
+<div class="row" id="navTabs">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#navTabs-1" role="tab" data-toggle="tab">Motion</a>
+        </li>
+        <li role="presentation">
+            <a href="#navTabs-1" role="tab" data-toggle="tab" id="nextTab">Next Item</a>
+        </li>
+        <li role="presentation">
+            <a href="#navTabs-4" role="tab" data-toggle="tab">Close the meeting</a>
+        </li>
+        <li role="presentation">
+            <a href="#navTabs-5" role="tab" data-toggle="tab">Reorder the agenda</a>
+        </li>
+        <li role="presentation">
+            <a href="#navTabs-6" role="tab" data-toggle="tab">Add agenda item during meeting</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="navTabs-1">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                            @Html.DropDownList("motion", (IEnumerable<SelectListItem>)ViewBag.Motions, "Select base motion", new { @class="form-control"})
+                    </div>
+                    <div class="row">
+                        <input type="text" class="form-control" placeholder="Name" id="replaceName" />
+                        <input type="text" class="form-control" placeholder="Standard" id="replaceStandard" />
+                        <input type="text" class="form-control" placeholder="VCF" id="replaceVCF"  />
+                        <input type="text" class="form-control" placeholder="DS" id="replaceDS" />
+                        @Html.DropDownList("replaceDate", (IEnumerable<SelectListItem>)ViewBag.ContinueTo, "Select Meeting Date", new { @class = "form-control" })
+                    </div>
+                    <div class="row">
+                        <button type="button" class="btn btn-primary" id="updateMotion">Personalize</button>
+                        <button type="button" class="btn btn-success" id="showMotion">Show Motion </button>
+                        @Html.DropDownList("mMover", (IEnumerable<SelectListItem>) ViewBag.BoardMembers, "Select mover", new { @class = "form-control" })
+                        @Html.DropDownList("mSecond", (IEnumerable<SelectListItem>) ViewBag.BoardMembers, "Select second", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <textarea rows="9" cols="82" class="form-control" id="oMotionText"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <button type="button" class="btn btn-success" id="showPrimaryAmendment">Show Primary Amendment </button>
+                        @Html.DropDownList("paMover", (IEnumerable<SelectListItem>)ViewBag.BoardMembers, "Select mover", new { @class = "form-control" })
+                        @Html.DropDownList("paSecond", (IEnumerable<SelectListItem>)ViewBag.BoardMembers, "Select second", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <textarea rows="5" cols="82" class="form-control" id="oPAText"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <button type="button" class="btn btn-success" id="showSecondaryAmendment">Show Secondary Amendment </button>
+                        @Html.DropDownList("saMover", (IEnumerable<SelectListItem>)ViewBag.BoardMembers, "Select mover", new { @class = "form-control" })
+                        @Html.DropDownList("saSecond", (IEnumerable<SelectListItem>)ViewBag.BoardMembers, "Select second", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <textarea rows="5" cols="82" class="form-control" id="sAText"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <button class="btn btn-success" type="button" id="showAmendedPrimaryAmendment">Show Amended Primary Amendment</button>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <textarea rows="5" cols="82" class="form-control" id="aPAText"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <button class="btn btn-success" type="button" id="showAmendedMotion">Show Amended Motion</button>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <textarea rows="5" cols="82" class="form-control" id="aMotionText"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <!-- Button controls -->
+                <button type="button" class="btn btn-success" id="enableVote">Vote</button>
+                <button type="button" class="btn btn-warning" id="noSecond">No Second</button>
+                <button type="button" class="btn btn-primary" id="showModal">Show Modal</button>
+                <button type="button" class="btn btn-primary" id="hideModal">Hide Modal</button>
+                <button type="button" class="btn btn-danger" id="clearModal">Clear Modal</button>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="navTabs-3">
+            Move to next item / section stuff here
+        </div>
+        <div role="tabpanel" class="tab-pane" id="navTabs-4">
+            Close the meeting stuff here
+        </div>
+        <div role="tabpanel" class="tab-pane" id="navTabs-5">
+            Reorder agenda stuff here
+        </div>
+        <div role="tabpanel" class="tab-pane" id="navTabs-6">
+            Add agenda item during meeting here.
+        </div>
+    </div>
+
+</div>
+<hr/>
+
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var chat = $.connection.meetingHub;
+            var agenda;
+            var sections = {};
+            var agendaItems = {};
+            var agendaItem = {};
+            var desc;
+            var voteCounter = 0; //  Use this as incoming vote counter
+            var quoremRequired = 6; // number of board members required to have a quorem
+            var insideLoop = false;
+            
+            var dateCertain = "";   // used for continued item
+            var selectedMotion = ""; // used for continued item
+            var motionPassed = false; // used to signal if vote passed or not
+
+            var currentSection = 0;
+            var currentAgendaItem = 0;
+
+            
+            var votePhase = "";
+
+            var motion = "";
+            var heading = "";
+
+            var mHeading = "The board is considering the following motion:";
+            var amHeading = "The board is considering the following amended motion:";
+            var pHeading = "The board is considering the following primary amendment to the motion:";
+            var apHeading = "The board is considering the following amended primary amendment to the motion:";
+            var sHeading = "The board is considering the following amendment to the pending amendment:";
+
+            var voteItem = {
+                voteItemId: "",
+                mMotion: "",
+                mMover: "",
+                mSecond: "",
+                aMotion: "",
+                mOutcome: "",
+                pAmendment: "",
+                pMover: "",
+                pSecond: "",
+                apAmendment: "",
+                pOutcome: "",
+                sAmendment: "",
+                sMover: "",
+                sSecond: "",
+                sOutcome: ""
+            }
+
+
+            function setupNewItem() {
+                //  initialize voteItem
+                voteItem = {
+                    voteItemId: "",
+                    mMotion: "",
+                    mMover: "",
+                    mSecond: "",
+                    aMotion: "",
+                    mOutcome: "",
+                    pAmendment: "",
+                    pMover: "",
+                    pSecond: "",
+                    apAmendment: "",
+                    pOutcome: "",
+                    sAmendment: "",
+                    sMover: "",
+                    sSecond: "",
+                    sOutcome: ""
+                }  
+                // initialize textboxes to empty
+                $('#oMotionText').val("");
+                $('#oPAText').val("");
+                $('#sAText').val("");
+                $('#aPAText').val("");
+                $('#aMotionText').val("");
+
+                // unselect movers and seconds
+                $('#mMover').val("");
+                $('#mSecond').val("");
+                $('#paMover').val("");
+                $('#paSecond').val("");
+                $('#saMover').val("");
+                $('#saSecond').val("");
+                $('#motion').val("");
+
+                // clear loop flag
+                insideLoop = false;
+
+            }
+
+            function handleContinuedItem() {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    async: false,
+                    contentType: 'application/json',
+                    url: '/MeetingManager/Meeting/HandleContinuedItem',
+                    data: JSON.stringify({
+                        "voteItemId": voteItem.voteItemId,
+                        "dateCertain": dateCertain 
+                    }),
+                    cache: false,
+                    success: function (data) {
+                        alert("break");
+                    },
+                    error: function () {
+
+                    }
+                });
+            };
+
+
+            $('#navTabs a:first').tab('show');
+
+            $('#motion').on('change', function() {
+                $('#oMotionText').val($('#motion').val());
+                selectedMotion = $(this).find(':selected').text();  // gets selected value for use with continued items
+                
+
+            });
+
+            $('#updateMotion').on('click', function() {
+                var motionText = $('#oMotionText').val();
+                motionText = motionText.replace('<NAME>', $('#replaceName').val());
+                motionText = motionText.replace('<DATE CERTAIN>', $('#replaceDate').val().substring(0, 12));
+                motionText = motionText.replace('<STANDARD>', $('#replaceStandard').val());
+                motionText = motionText.replace('<VCF>', $('#replaceVCF').val());
+                motionText = motionText.replace('<DS>', $('#replaceDS').val());
+                $('#oMotionText').val(motionText);
+
+                // detect if a date certain is set, and if so, capture it for continued item processing
+                if (selectedMotion === 'Continue') {
+                    dateCertain = $('#replaceDate').val();
+                }
+
+            });
+
+            $('#showModal').on('click', function() {
+                chat.server.showModal();
+            });
+
+            $('#hideModal').on('click', function() {
+                chat.server.hideModal();
+            });
+
+            $('#clearModal').on('click', function() {
+                chat.server.clearModal();
+            });
+
+            $('#showMotion').on('click', function() {
+                votePhase = "1";
+                motion = $('#oMotionText').text();
+                heading = mHeading;
+                voteItem.mMotion = $('#oMotionText').text();
+                // added to zero out amended motion if its a no second situation and original motion is recalled.
+                $('#aMotionText').val("");
+                showMotion();
+                chat.server.showModal();
+            });
+
+            $('#showPrimaryAmendment').on('click', function() {
+                votePhase = "2";
+                motion = $('#oMotionText').text() + "<hr />" + $('#oPAText').text();
+                heading = pHeading;
+                $('#aMotionText').val($('#oMotionText').text());
+                voteItem.pAmendment = $('#oPAText').text();
+                // added to zero out secondary Amendment if its a no second situation and original motion is recalled.
+                $('#aPAText').val("");
+                voteItem.apAmendment = "";
+                $('#sAText').val("");
+                showMotion();
+            });
+
+            $('#showSecondaryAmendment').on('click', function() {
+                votePhase = "3";
+                motion = motion + "<hr />" + $('#sAText').text();
+                heading = sHeading;
+                $('#aPAText').val($('#oPAText').text());
+                voteItem.sAmendment = $('#sAText').text();
+                showMotion();
+            });
+
+            $('#showAmendedPrimaryAmendment').on('click', function() {
+                votePhase = "2";
+                heading = apHeading;
+                motion = $('#oMotionText').text() + "<hr />" + $('#aPAText').text();
+                voteItem.apAmendment = $('#aPAText').text();
+                showMotion();
+            });
+
+            $('#showAmendedMotion').on('click', function() {
+                votePhase = "1";
+                motion = $('#aMotionText').text();
+                heading = amHeading;
+                voteItem.aMotion = $('#aMotionText').text();
+                showMotion();
+            });
+
+            function showMotion() {
+                chat.server.showMotion(heading, motion);
+            }
+
+
+            $('#noSecond').on('click', function() {
+                // take noSecond actions on the current votePhase item
+                switch (votePhase) {
+                case "3":
+                    voteItem.mMover = $('#mMover').val();
+                    voteItem.mSecond = $('#mSecond').val();
+                    voteItem.pMover = $('#paMover').val();
+                    voteItem.pSecond = $('#paSecond').val();
+                    voteItem.sMover = $('#saMover').val();
+                    voteItem.sSecond = "0";
+                    voteItem.sOutcome = "failed";
+                    break;
+                    case "2":
+                        voteItem.mMover = $('#mMover').val();
+                        voteItem.mSecond = $('#mSecond').val();
+                        voteItem.pMover = $('#paMover').val();
+                        voteItem.pSecond = "0";
+                        voteItem.pOutcome = "failed";
+                    break;
+                    case "1":
+                        voteItem.mMover = $('#mMover').val();
+                        voteItem.mSecond = "0";
+                        voteItem.mOutcome = "failed";
+                    break;
+                default:
+                    break;
+                }
+                // record the Motion state
+                recordMotion();
+                insideLoop = true;
+
+                // roll back one votePhase
+                switch (votePhase) {
+                    case "3":
+                        votePhase = "2";
+                        break;
+                    case "2":
+                        votePhase = "1";
+                        break;
+                    case "1":
+                        votePhase = "";
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+
+            function initializeVoteItem() {
+                switch (votePhase) {
+                    case "3":
+                        voteItem.mMover = $('#mMover').val();
+                        voteItem.mSecond = $('#mSecond').val();
+                        voteItem.pMover = $('#paMover').val();
+                        voteItem.pSecond = $('#paSecond').val();
+                        voteItem.sMover = $('#saMover').val();
+                        voteItem.sSecond = $('#saSecond').val();
+                        break;
+                    case "2":
+                        voteItem.mMover = $('#mMover').val();
+                        voteItem.mSecond = $('#mSecond').val();
+                        voteItem.pMover = $('#paMover').val();
+                        voteItem.pSecond = $('#paSecond').val();
+                        break;
+                    case "1":
+                        voteItem.mMover = $('#mMover').val();
+                        voteItem.mSecond = $('#mSecond').val();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
+            function recordMotion() {
+                
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    async: false,
+                    contentType: 'application/json',
+                    url: '/MeetingManager/Meeting/RegisterVoteItem',
+                    data: JSON.stringify({
+                        'mMotion': voteItem.mMotion,
+                        'mMover': voteItem.mMover,
+                        'mSecond': voteItem.mSecond,
+                        'aMotion': voteItem.aMotion,
+                        'mOutcome': voteItem.mOutcome,
+                        'pAmendment': voteItem.pAmendment,
+                        'pMover': voteItem.pMover,
+                        'pSecond': voteItem.pSecond,
+                        'apAmendment': voteItem.apAmendment,
+                        'pOutcome': voteItem.pOutcome,
+                        'sAmendment': voteItem.sAmendment,
+                        'sMover': voteItem.sMover,
+                        'sSecond': voteItem.sSecond,
+                        'sOutcome' : voteItem.sOutcome,
+                        'agendaItemId' : agendaItem.Id
+                    }),
+                    cache: false,
+                    success: function(data) {
+                        // initialize global variables
+                        voteItem.voteItemId = data.VoteItemId;
+                    },
+                    error: function() {
+
+                    }
+                });
+            };
+
+            function takeVote() {
+                voteCounter = 0; // zero the vote counter because we are fixing to enable voting.
+                insideLoop = true; // we are voting on an item, so we are in a loop until the next item resets this.
+
+                switch (votePhase) {
+                case "3":
+                    // all three items are valid, the modal should match, so no action is required.  Go to vote
+                    chat.server.goVote(voteItem.voteItemId, votePhase);
+                    break;
+                case "2":
+                    // case 3 should be empty because it doesn't exist or failed. empty it, and go to vote
+                    chat.server.goVote(voteItem.voteItemId, votePhase);
+                    break;
+                case "1":
+                    // cases 2 and 3 should be empty because they don't exist or failed.  empty both, then go to vote
+                    chat.server.goVote(voteItem.voteItemId, votePhase);
+                    break;
+                default:
+                    // there should be nothing here.
+                    break;
+                }
+            }
+
+            function recordAmendedText() {
+                var amendedText = "";
+                switch(votePhase) {
+                    case "2":
+                        amendedText = $('#aPAText').text();
+                        break;
+                    case "1":
+                        amendedText = $('#aMotionText').text();
+                        break;
+                    default:
+                        break;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: '/MeetingManager/Meeting/RecordAmendedText',
+                    data: JSON.stringify({
+                        'voteItemId': voteItem.voteItemId,
+                        'votePhase': votePhase,
+                        'amendedText' : amendedText
+                    }),
+                    cache: false,
+                    success: function (data) {
+                        
+                    },
+                    error: function () {
+
+                    }
+                });
+            };
+
+            function testForSame() {
+                if ($('#mMover').val() === $('#mSecond').val()) {
+                    alert("Mover and Seconded for the Motion are the same person, and this is not allowed.");
+                    return false;
+                }
+
+                if ($('#mMover').val() === '' || $('#mSecond').val() === '') {
+                    alert("Must have a mover and a second to proceed");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            $('#enableVote').on('click', function() {
+                if (testForSame()) 
+                {
+                    if (!insideLoop) 
+                    {
+                        initializeVoteItem();
+                        recordMotion();
+                        
+                    } else 
+                    {
+                        recordAmendedText();
+                    }
+                    takeVote();
+                    }
+
+                
+            });
+
+
+            $('#nextTab').on('click', function () {
+                chat.server.hideModal();
+                chat.server.clearModal();
+                setupNewItem();
+                if (currentAgendaItem + 1 < agendaItems.length) {
+                    currentAgendaItem++;
+                    agendaItem = agendaItems[currentAgendaItem];
+                    $('#agendaItemTitle').empty().append(agendaItem.Description);
+                    desc = agendaItem.Description.split('|');
+                    $('#replaceName').empty().val(desc[0]);
+                } else {
+                    if (currentSection < agenda.SectionHeadings.length - 1) {
+                        currentAgendaItem = 0;
+                        currentSection++;
+                    }
+                    agendaItems = sections[currentSection].AgendaItems;
+                    agendaItem = agendaItems[currentAgendaItem];
+                    $('#sectionTitle').empty().append(sections[currentSection].Description);
+
+                    if (agendaItem) {
+                        $('#agendaItemTitle').empty().append(agendaItem.Description);
+                        desc = agendaItem.Description.split('|');
+                        $('#replaceName').empty().val(desc[0]);
+                    } else {
+                        $('#agendaItemTitle').empty();
+                        $('#replaceName').empty();
+                    }
+
+                }
+                chat.server.updatePosition(currentSection, currentAgendaItem);
+            });
+
+
+            chat.client.addBoardMember = function(name, id) {
+                $('#attendence').append('<li id="' + id + '">' + name + '</li>');
+                if ($('#attendence').children().length > quoremRequired) {
+                    $('#roster').removeAttr("style");
+                    $('#roster').css({ 'background-color': 'green' });
+                    chat.server.changeQuorem("true");
+                };
+            };
+
+            chat.client.removeBoardMember = function(name, id) {
+                $('#' + id).remove();
+                if ($('#attendence').children().length < 3) {
+                    $('#roster').removeAttr("style");
+                    $('#roster').css({ 'background-color': 'red' });
+                    chat.server.changeQuorem("false");
+                };
+            };
+
+            chat.client.recordVote = function() {
+                voteCounter = voteCounter + 1;
+                if (voteCounter === $('#attendence').children().length) {
+                    // voting is complete, tabulate the results and display them
+                    var voteResult = "";
+                    var tally = "";
+                    var totalPresent = $('#attendence').children().length;
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        url: '/MeetingManager/Meeting/TallyVote',
+                        data: JSON.stringify({ 'voteItemId': voteItem.voteItemId, 'votePhase': votePhase, 'membersPresent': totalPresent }),
+                        cache: false,
+                        success: function(data) {
+                            voteResult = data.result;
+                            if (voteResult.indexOf("passed") > -1) {
+                                voteResult = "<h2><span style='background-color: lightgreen'>" + voteResult + "</span></h2>";
+                                motionPassed = true;  // sets continued flag
+                            } else {
+                                voteResult = "<h2><span style='background-color: lightcoral'>" + voteResult + "</span></h2>";
+                                motionPassed = false;  // sets continued flag
+                            }
+                            tally = data.tally;
+                            chat.server.showVoteResult(voteResult, tally);
+                            if (votePhase === "1") {
+                                insideLoop = false;
+                                if (motionPassed) {
+                                    if (selectedMotion === "Continue") {
+                                        handleContinuedItem();
+                                    }
+                                }
+                            }
+                        },
+                        error: function() {}
+                    });
+                }
+            }
+
+            $('#todaysAgenda').on("change", function() {
+                //  initialization code here
+                chat.server.initializeAgenda($('#todaysAgenda').val());
+
+                $.ajax({
+                    type: "GET",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: '/MeetingManager/Meeting/GetAgenda',
+                    data: { 'agendaId': $('#todaysAgenda').val() },
+                    cache: false,
+                    success: function(data) {
+                        agenda = data;
+                        for (var i = 0; i < agenda.SectionHeadings.length; i++) {
+                            sections[i] = agenda.SectionHeadings[i];
+                        }
+                        agendaItems = sections[currentSection].AgendaItems;
+                        agendaItem = agendaItems[currentAgendaItem];
+                        $('#sectionTitle').empty().append(sections[currentSection].Description);
+                        if (agendaItem) {
+                            $('#agendaItemTitle').empty().append(agendaItem.Description);
+                            desc = agendaItem.Description.split('|');
+                            $('#replaceName').empty().val(desc[0]);
+                        } else {
+                            $('#agendaItemTitle').empty();
+                            $('#replaceName').empty();
+                        }
+
+                    },
+                    error: function() {
+
+                    }
+                });
+            });
+
+
+            $.connection.hub.start().done(function() {
+                chat.server.joinRoom('Manager', "Manager");
+            });
+        });
+    </script>
+
+}

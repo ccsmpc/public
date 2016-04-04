@@ -1,0 +1,291 @@
+﻿@{
+    ViewBag.Title = "Presenter";
+}
+
+<div class="row">
+    <div class="col-md-3" id="quoremReporter" style="background-color: red">Board does not have a Quorem</div>
+    <div class="col-md-9" id="meetingTitle">
+        <b>None selected</b>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-4">Section</div>
+    <div class="col-md-8">Item</div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <span id="sectionTitle">None selected</span>
+    </div>
+    <div class="col-md-8">
+        <span id="agendaItemTitle">None selected</span>
+    </div>
+</div>
+<hr/>
+
+<div class="row">
+    <div class="tabs" id="tabs">
+        <ul class="tab-links">
+
+        </ul>
+        <div class="tab-content">
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalMotion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><span class="modal-title" id="modalTitle"></span></div>
+            <div class="modal-body">
+                <h4>
+                    <span id="modalBody">
+                        <span id="motionText"></span>
+                        <span id="primaryAmendmentText"></span>
+                        <span id="secondaryAmendmentText"></span>
+                    </span>
+                </h4>
+            </div>
+            <div class="modal-footer"><span id="modalFooter"></span></div>
+            <div class="hidden" id="modalHidden"></div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        
+        $(function() {
+            $(document).on('click', '.tabs .tab-links a', function (e) {
+                var currentAttrValue = $(this).attr('href');
+                $(currentAttrValue).addClass("active").siblings().removeClass("active");
+                $(currentAttrValue).show().siblings().hide();
+                $(this).parent('li').addClass('active').siblings().removeClass('active');
+                e.preventDefault();
+            });
+
+            var chat = $.connection.meetingHub;
+
+            var agenda;
+            var sections = {};
+            var agendaItems = {};
+            var agendaItem = {};
+            var workItem = {};
+            var workItemAttachments = {};
+            var agendaItemAttachments = {};
+
+            
+
+            function addTab(tabCounter, tabText, contentLink) {
+                contentLink = contentLink.replace("~", "http://historic.mpc.local"); // http://localhost:13479 http://historic.mpc.local
+                var list;
+                var div;
+                if (tabCounter === 0) {
+                    list = '<li class="active"><a href="#tab' + tabCounter + '">' + tabText + '</a></li>';
+                    div = '<div id=tab' + tabCounter + ' class="tab active"><object id="attachment-' + tabCounter + '" type="application/pdf" data="' + contentLink + '"></div>';
+                } else {
+                    list = '<li><a href="#tab' + tabCounter + '">' + tabText + '</a></li>';
+                    div = '<div id=tab' + tabCounter + ' class="tab"><object id="attachment-' + tabCounter + '" type="application/pdf" data="' + contentLink + '"></div>';
+                }
+                $('.tab-links').append(list);
+                $('.tab-content').append(div);
+            };
+
+            
+
+            $.connection.hub.start().done(function() {
+                chat.server.joinRoom('Podium', "Presenter");
+            });
+            
+
+            chat.client.showModal = function () {
+
+                $('#modalMotion').modal('show');
+            }
+
+            chat.client.hideModal = function() {
+                $('#modalMotion').modal('hide');
+            }
+
+            chat.client.clearStage = function (voteStage, vote) {
+                switch (voteStage) {
+                    case "3":
+                        $('#secondaryAmendmentText').empty();
+                        $('#modalTitle').append("The secondary amendment " + vote + ". <br />");
+                        break;
+                    case "2":
+                        $('#primaryAmendmentText').empty();
+                        $('#modalTitle').append("The primary amendment " + vote + ".<br />");
+                        break;
+                    case "1":
+                        $('#modalTitle').append("The motion has " + vote + ".");
+                        break;
+
+
+                    default:
+                        break;
+                }
+            }
+
+            chat.client.clearModal = function () {
+                $('#modalTitle').empty();
+                $('#motionText').empty();
+                $('#primaryAmendmentText').empty();
+                $('#secondaryAmendmentText').empty();
+                $('#modalFooter').empty();
+            }
+
+            chat.client.clearFooter = function () {
+                $('#modalFooter').empty();
+            }
+
+            chat.client.showMotion = function (motionHeader, motionText) {
+                $('#modalTitle').empty().append(motionHeader);
+                $('#motionText').empty().append(motionText);
+            }
+
+
+            chat.client.showCurrentMotion = function (currentMotion) {
+                $('#modalTitle').empty().append('<h2>The motion before the board is:</h2>');
+                $('#modalBody').empty().append(currentMotion);
+                $('#modalFooter').empty();
+                $('#modalMotion').modal('show');
+            };
+
+            chat.client.hideCurrentMotion = function () {
+                $('#modalMotion').modal('hide');
+
+
+            };
+            chat.client.showCurrentVoting = function (currentVoteItemId) {
+                $('#modalTitle').empty().append('<h2>The board is voting on the following:</h2>');
+                voteItemId = currentVoteItemId;
+            };
+
+            chat.client.showVoteResult = function (result, tally) {
+                $('#modalTitle').empty().append(result);
+                $('#modalFooter').empty().append(tally);
+                $('#modalMotion').modal('show');
+            };
+
+            chat.client.changeQuorem = function(isQuorem) {
+                if (isQuorem === "true") {
+                    $('#quoremReporter').removeAttr("style");
+                    $('#quoremReporter').css({ "background-color": "green" });
+                    $('#quoremReporter').empty().append('Board has a Quorem');
+                } else {
+                    $('#quoremReporter').removeAttr("style");
+                    $('#quoremReporter').css({ "background-color": "red" });
+                    $('#quoremReporter').empty().append('Board does not have a Quorem');
+                }
+            };
+
+            chat.client.updatePosition = function(currentSection, currentAgendaItem) {
+                agendaItems = sections[currentSection].AgendaItems;
+                agendaItem = agendaItems[currentAgendaItem];
+                $('#sectionTitle').empty().append(sections[currentSection].Description);
+
+                if (agendaItem) {
+                    $('#agendaItemTitle').empty().append(agendaItem.Description);
+
+                    if (agendaItem.WorkItems.length > 0) workItem = agendaItem.WorkItems;
+
+                    $('#tabs').empty().append('<ul class="tab-links"></ul><div class="tab-content"></div>');
+                    var tabCounter = 0;
+
+                    if (workItem.length > 0) {
+                        workItemAttachments = workItem[0].Attachments;
+                        for (i = 0; i < workItemAttachments.length; i++) {
+                            addTab(tabCounter, workItemAttachments[i].Description, workItemAttachments[i].FilePath);
+                            tabCounter ++;
+                        };
+                    }
+                    if (agendaItem.Attachments.length > 0) {
+                        agendaItemAttachments = agendaItem.Attachments;
+                        for (i = 0; i < agendaItemAttachments.length; i++) {
+                            addTab(tabCounter, agendaItemAttachments[i].Description, agendaItemAttachments[i].FilePath);
+                            tabCounter ++;
+                        };
+                    }
+                    
+                    $('#tabs').show();
+                } else {
+                    $('#agendaItemTitle').empty();
+                    $('#tabs').hide();
+                }
+            };
+        
+
+            chat.client.initializeAgenda = function(agendaId) {
+                //  initialization code here
+                var currentSection = 0;
+                var currentAgendaItem = 0;
+
+                $.ajax({
+                    type: "GET",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: '/MeetingManager/Meeting/GetAgenda',
+                    data: { 'agendaId': agendaId },
+                    cache: false,
+                    success: function(data) {
+                        var i;
+                        agenda = data;
+                        for (i = 0; i < agenda.SectionHeadings.length; i++) {
+                            sections[i] = agenda.SectionHeadings[i];
+                        }
+                        agendaItems = sections[currentSection].AgendaItems;
+                        agendaItem = agendaItems[currentAgendaItem];
+                        $('#meetingTitle').empty().append('<b>' + agenda.Title + '</b>');
+                        $('#sectionTitle').empty().append(sections[currentSection].Description);
+                        $('#agendaItemTitle').empty();
+                        if (agendaItem) {
+                            $('#agendaItemTitle').empty().append(agendaItem.Description);
+                            $('#tabs').empty().append('<ul class="tab-links"></ul><div class="tab-content"></div>');
+                            var tabCounter = 0;
+                            // add agendaItemAttachemnts to tabs
+
+                            if (agendaItem.Attachments.length > 0) {
+                                agendaItemAttachments = agendaItem.Attachments;
+                                for (i = 0; i < agendaItemAttachments.length; i++) {
+                                    addTab(tabCounter, agendaItemAttachments[i].Description, agendaItemAttachments[i].FilePath);
+                                    tabCounter++;
+                                };
+                                // add workItemAttachments to tabs
+                                if (agendaItem.WorkItems.length > 0) {
+                                    workItem = agendaItem.WorkItems;
+                                    if (workItem.length > 0) {
+                                        workItemAttachments = workItem[0].Attachments;
+                                        for (i = 0; i < workItemAttachments.length; i++) {
+                                            addTab(tabCounter, workItemAttachments[i].Description, workItemAttachments[i].FilePath);
+                                            tabCounter++;
+                                        };
+                                    }
+                                }
+
+                                $('#tabs').show();
+                            } else {
+                                $('#agendaItemTitle').empty();
+                                $('#tabs').hide();
+                            }
+                        };
+                    },
+                    error:
+
+                        function() {}
+                });
+            };
+
+
+        });
+    </script>
+
+}

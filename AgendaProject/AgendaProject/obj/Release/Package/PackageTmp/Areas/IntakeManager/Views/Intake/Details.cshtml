@@ -1,0 +1,119 @@
+﻿@model AgendaProject.Models.WorkItem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<div>
+    <h4>WorkItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Recieved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Recieved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Filenumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Filenumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Petitioner)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Petitioner)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PetitionType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PetitionType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FeePaid)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FeePaid)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ConstructionCost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ConstructionCost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ScopeOfWork)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ScopeOfWork)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AssignedTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AssignedTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsComplete)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsComplete)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReadyForReview)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReadyForReview)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WasWithdrawn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WasWithdrawn)
+        </dd>
+
+    </dl>
+</div>
+<hr />
+<div class="row">
+    Attachments
+</div>
+<hr />
+@foreach (var attachment in Model.Attachments)
+{
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-sx-11">@Html.DisplayFor(m => attachment.Description)</div>
+    </div>
+}
+<hr />

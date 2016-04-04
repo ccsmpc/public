@@ -1,0 +1,21 @@
+﻿@model AgendaProject.Areas.Admin.Models.PhotoViewModel
+
+@{
+    ViewBag.Title = "UploadPhoto";
+}
+
+<h2>Upload Savannah Historic Board of Review Board Member Photos</h2>
+
+@using (Html.BeginForm("UploadPhoto", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <div class="col-md-4">
+            @Html.DropDownListFor(m => m.BoardMemberId, ViewBag.Members as IEnumerable<SelectListItem>, new { @class = "form-control" })
+        </div>
+        <div class="col-md-5">
+            <input type="file" name="Photo" />
+            <input type="submit" value="UploadPhoto" class="save" />
+        </div>
+    </div>
+}
+

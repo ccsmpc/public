@@ -1,0 +1,24 @@
+﻿@model AgendaProject.Models.ViewModels.EditAttachment
+
+@{
+    ViewBag.Title = "EditDescription";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.WorkItemId);
+    @Html.HiddenFor(m=>m.Attachment.Id)
+
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">@Html.LabelFor(model => model.Attachment.Description)</span>
+            @Html.EditorFor(model => model.Attachment.Description, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+
+}

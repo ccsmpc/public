@@ -1,0 +1,75 @@
+﻿@model IEnumerable<AgendaProject.Models.BoardMember>
+
+@{
+    ViewBag.Title = "BoardMembers";
+}
+
+<h2>Savannah Historic District Board of Review Board Members</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateBoardMember")
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Honorific)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GenerationalSuffix)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhotoName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Position)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Honorific)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GenerationalSuffix)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmailAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhotoName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Position)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditBoardMember", new { id=item.BoardMemeberId }) |
+            @Html.ActionLink("Details", "DetailBoardMember", new { id=item.BoardMemeberId }) |
+            @Html.ActionLink("Delete", "DeleteBoardMember", new { id=item.BoardMemeberId })
+        </td>
+    </tr>
+}
+
+</table>

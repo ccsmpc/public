@@ -1,0 +1,47 @@
+﻿@model PagedList.IPagedList<AgendaProject.Models.MeetingTime>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "Admin Functions";
+}
+
+<h2>Savannah Historic District Board of Review Administrative Functions</h2>
+
+<hr/>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        The default meeting time is: @ViewBag.StartTime <br/>
+        The default cutoff time is: @ViewBag.CutoffTime <br/>
+        <hr />
+        @Html.ActionLink("Add Meetings for the next year", "AddYear") | <br/>
+        @Html.ActionLink("Add a special meeting", "AddSpecial") | <br/>
+        @Html.ActionLink("Manage Board Members", "BoardMembers") | <br/>
+        @Html.ActionLink("Upload Board Member Photo", "UploadPhoto")
+    </div>
+    <div class="col-md-8">
+        <table class="table table-striped">
+            <tr>
+                <th>Meeting Date and Time</th>
+                <th>Cutoff Date and Time</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(i => item.MeetingDate)</td>
+                    <td>@Html.DisplayFor(i => item.CutoffDate)</td>
+                    <td>@Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                        @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+                    </td>
+                </tr>
+            }
+        </table>
+        <br/>
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    </div>
+</div>
+

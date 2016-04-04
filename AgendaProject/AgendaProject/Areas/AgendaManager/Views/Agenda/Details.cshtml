@@ -1,0 +1,63 @@
+﻿@model AgendaProject.Models.Agenda
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="hidden-print" style="padding-top: 10px; padding-bottom: 10px">
+    @Html.ActionLink("Add", "Add", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) an agenda item |
+    @if (Model.AgendaType != "Final Agenda")
+    {
+        @Html.ActionLink("Finalize", "Finalize", new { id = Model.Id })
+        <text> | </text>
+    }
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<img width="100%" src="~/images/logo.jpg" />
+<div>
+    <hr />
+    <div class="row"><span class="pull-right"><b>@Html.DisplayFor(model => model.Location)</b></span></div>
+    <div class="row"><span class="pull-right"><b>@Model.MeetingDateTime.ToLongDateString()</b></span></div>
+    <div class="row"><span class="pull-right"><b>@Html.DisplayFor(model => model.AgendaType)</b></span></div>
+    <hr />
+    <div class="row text-center">
+        <b>@Html.DisplayFor(model => model.Title)</b>
+    </div>
+    <hr />
+</div>
+<div>
+    @foreach (var section in Model.SectionHeadings)
+    {
+        <div class="row">
+            <b>@Html.DisplayFor(s => section.Description)</b>
+        </div>
+        int? startId = 0;
+        foreach (var agendaItem in section.AgendaItems)
+        {
+            if (agendaItem.Prev == null)
+            {
+                startId = agendaItem.Id;
+            }
+        }
+        for (int i = 0; i < section.AgendaItems.Count; i++)
+        {
+            int? temp = 0;
+            foreach (var agendaItem in section.AgendaItems)
+            {
+                if (agendaItem.Id == startId)
+                {
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-11">@Html.DisplayFor(s => agendaItem.Description)</div>
+                    </div>
+                    temp = agendaItem.Nxt;
+                }
+            }
+            startId = temp;
+        }
+
+
+    }
+
+</div>

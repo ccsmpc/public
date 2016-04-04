@@ -1,0 +1,154 @@
+﻿@model AgendaProject.Models.BoardMember
+
+@{
+    ViewBag.Title = "DetailBoardMember";
+}
+
+<h2>DetailBoardMember</h2>
+
+<div>
+    <h4>BoardMember</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Honorific)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Honorific)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GenerationalSuffix)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GenerationalSuffix)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZipCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhotoName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhotoName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Position)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Position)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Organization)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Organization)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AppointedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppointedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AppointmentStartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppointmentStartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AppointmentEndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppointmentEndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsExOfficio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsExOfficio)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "EditBoardMember", new { id = Model.BoardMemeberId }) |
+    @Html.ActionLink("Back to List", "BoardMembers")
+</p>
